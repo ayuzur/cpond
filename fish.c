@@ -5,6 +5,7 @@
 
 #include "fish.h"
 #include "draw.h"
+#include "sleep.h"
 
 void* checkedCalloc(int i, size_t size) {
 	void* ptr = calloc(i, size);
@@ -58,7 +59,11 @@ Point point_add(Point p1, Point p2) {
 	return p;
 }
 
-Point point_mult(Point p, float num) {
+Point point_sub(Point p1, Point p2) {
+	Point p = {p1.x - p2.x, p1.y - p2.y};
+}
+
+Point point_scale(Point p, float num) {
 	Point np;
 	np.x = p.x * num;
 	np.y = p.y * num;
@@ -186,8 +191,8 @@ void fish_draw(Fish* fish) {
 				// fins
 				for (int i = 0; i < fish->finCount; i++) {
 					if (counter == fish->fins[i] - 1) {
-						Point finR = point_mult(dirVec.right, 1.5);
-						Point finL = point_mult(dirVec.left, 1.5);
+						Point finR = point_scale(dirVec.right, 1.5);
+						Point finL = point_scale(dirVec.left, 1.5);
 						finR = point_add(cur->p, finR);
 						finL = point_add(cur->p, finL);
 						draw_line_p(finR, curRight);
@@ -280,8 +285,45 @@ bool fish_move_towards(Fish* fish, Point to, float maxDist) {
 void fish_target(Fish* fish, Point target) {
 	fish->target = target;
 	fish->start = fish->head->p;
+	fish->inLinePos = fish->start;
+}
+
+void fish_translate(Fish* fish, Point p) {
+	fish->head->p = point_add(fish->head->p, p);
+	fish_update(fish);
 }
 
 bool fish_swim(Fish* fish) {
+	// TODO have this be calculated when targeting
+	float total = point_dist(fish->start, fish->target);
+	float traveled = point_dist(fish->inLinePos, fish->start);
+	float remaining = total - traveled;
+	if (remaining < fish->speed * DELTA_TIME) {
+		return true;
+	}
 
+	draw_line_p(fish->start, fish->inLinePos);
+
+	draw_pixel_p(fish->target);
+
+	Point forward = point_sub(fish->target, fish->start);
+	PerpPoints normPathAxis = getScaledPerpPoints(forward, 1);
+
+	Point forwardTranslation = point_scale(normPathAxis.backward, fish->speed * DELTA_TIME);
+	fish->inLinePos = point_add(fish->inLinePos, forwardTranslation);
+
+	traveled = point_dist(fish->inLinePos, fish->start);
+
+	float period = 40;
+	float height = 15;	
+	float displacement = sin((traveled * M_PI) / period) * height;
+
+	Point horizontalTranslation = point_scale(normPathAxis.left, displacement);
+
+	Point newPos = point_add(horizontalTranslation, fish->inLinePos);
+	fish_move(fish, newPos);
+	//fish_translate(fish, translation);
+	
+	return false;
 }
+

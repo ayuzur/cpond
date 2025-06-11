@@ -11,6 +11,10 @@ void draw_pixel(int x, int y) {
 	draw_pixelch(x, y, "#");
 }
 
+void draw_pixel_p(Point p) {
+	draw_pixel(p.x, p.y);
+}
+
 int sign(int i) {
 	if (i < 0) {
 		return -1;

@@ -12,6 +12,8 @@ void draw_pixelch(int x, int y, char* ch);
 // draws "pixel" using default character
 void draw_pixel(int x, int y);
 
+void draw_pixel_p(Point p);
+
 void draw_line(int x1, int y1, int x2, int y2);
 
 // draw lines from point to point
