@@ -58,9 +58,10 @@ Point point_add(Point p1, Point p2) {
 	Point p = {p1.x + p2.x, p1.y + p2.y};
 	return p;
 }
-
+// what was this doing if the return was missing
 Point point_sub(Point p1, Point p2) {
 	Point p = {p1.x - p2.x, p1.y - p2.y};
+	return p;
 }
 
 Point point_scale(Point p, float num) {
@@ -302,16 +303,30 @@ bool fish_swim(Fish* fish) {
 		return true;
 	}
 
-	draw_line_p(fish->start, fish->inLinePos);
-
-	draw_pixel_p(fish->target);
 
 	Point forward = point_sub(fish->target, fish->start);
+
+	//draw_line_p(fish->start, point_add(fish->start, forward));
+	//draw_line_p(fish->start, fish->target);
+
+	// TODO verify
 	PerpPoints normPathAxis = getScaledPerpPoints(forward, 1);
 
-	Point forwardTranslation = point_scale(normPathAxis.backward, fish->speed * DELTA_TIME);
+	Point forwardTranslation = point_scale(normPathAxis.forward, fish->speed * DELTA_TIME);
 	fish->inLinePos = point_add(fish->inLinePos, forwardTranslation);
 
+	// DEBUG
+	//draw_line_p(fish->start, fish->inLinePos);
+
+	draw_pixel_p(fish->target);
+	//draw_line_p(fish->start, point_add(fish->start, point_scale(normPathAxis.forward, 10)));
+	//draw_line_p(fish->start, point_add(fish->start, point_scale(normPathAxis.backward, 10)));
+	//draw_line_p(fish->start, point_add(fish->start, point_scale(normPathAxis.right, 10)));
+	//draw_line_p(fish->start, point_add(fish->start, point_scale(normPathAxis.left, 10)));
+
+
+	// END DEBUG
+	
 	traveled = point_dist(fish->inLinePos, fish->start);
 
 	float period = 40;

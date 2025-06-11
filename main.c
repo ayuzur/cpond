@@ -31,11 +31,14 @@ int main() {
 	fish_target(&fish, t);
 
 	char chlast = ' ';
+	bool pause = false;
 	while (true) {
-		draw_pixel(2, 2);
 		char ch = getch();
 		if (ch == 'q') {
 			break;
+		}
+		if (ch == 'p') {
+			pause = !pause;
 		}
 
 		width = getmaxx(stdscr) / 2;
@@ -43,10 +46,13 @@ int main() {
 
 		// is erase or clear better?
 		erase();
-		mvprintw(1, 1, "%f", DELTA_TIME);
-		
+		mvprintw(1, 1, "%f", DELTA_TIME);	
+		mvprintw(4, 1, "head: %f %f", fish.head->p.x, fish.head->p.y);
 
-		bool there = fish_swim(&fish);
+		bool there = false;
+		if (!pause) {
+			there = fish_swim(&fish);
+		}
 		if (there) {
 			t.x = rand() % width;
 			t.y = rand() % height;
