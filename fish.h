@@ -23,6 +23,7 @@ typedef struct Fish {
 	Point inLinePos;
 } Fish;
 
+
 // makes fish by linking length number of segments each with given radi 
 Fish fish_make(int length, int* radi, int size, int* fins, int finCount, Point p, int speed);
 

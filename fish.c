@@ -6,102 +6,8 @@
 #include "fish.h"
 #include "draw.h"
 #include "sleep.h"
+#include "utils.h"
 
-void* checkedCalloc(int i, size_t size) {
-	void* ptr = calloc(i, size);
-	if (ptr == NULL) {
-		printf("ERROR: allocation with calloc failed");
-		exit(1);
-	}
-	return ptr;
-
-}
-
-// TODO MOVE TO SEPARATE FILE
-typedef struct PerpPoints {
-	Point forward;
-	Point backward;
-	Point right;
-	Point left;
-} PerpPoints;
-
-Point rotR(Point p) {
-	Point np;
-	np.x = p.y;
-	np.y = -p.x;
-	return np;
-}
-
-Point rotL(Point p) {
-	Point np;
-	np.x = -p.y;
-	np.y = p.x;
-	return np;
-}
-
-PerpPoints getScaledPerpPoints(Point forward, int radius) {
-	float dist = sqrtf(forward.x * forward.x + forward.y * forward.y);
-	//printf("dist: %f\n", dist);
-	float scale = (float) radius / dist;
-	forward.x *= scale;
-	forward.y *= scale;
-	PerpPoints perp = {
-		forward,
-		rotR(rotR(forward)),
-		rotR(forward),
-		rotL(forward)
-	};
-	return perp;
-}
-
-Point point_add(Point p1, Point p2) {
-	Point p = {p1.x + p2.x, p1.y + p2.y};
-	return p;
-}
-// what was this doing if the return was missing
-Point point_sub(Point p1, Point p2) {
-	Point p = {p1.x - p2.x, p1.y - p2.y};
-	return p;
-}
-
-Point point_scale(Point p, float num) {
-	Point np;
-	np.x = p.x * num;
-	np.y = p.y * num;
-	return np;
-}
-bool point_eq(Point p1, Point p2) {
-	bool xEq = p1.x == p2.x;
-	bool yEq = p1.y == p2.y;
-	return xEq && yEq;
-}
-
-float point_dist(Point from, Point to) {
-	float diffX = to.x - from.x;
-	float diffY = to.y - from.y;
-	float dist = sqrtf(diffX * diffX + diffY * diffY);
-	return dist;
-}
-
-Point point_mv_towards(Point from, Point to, float maxDist) {
-	float diffX = to.x - from.x;
-	float diffY = to.y - from.y;
-	float dist = sqrtf(diffX * diffX + diffY * diffY);
-
-	if (dist == 0) {
-		return from;
-	}
-	if (dist <= maxDist) {
-		return to;
-	}
-	float scale = maxDist / dist;
-	float scaledX = diffX * scale;
-	float scaledY = diffY * scale;
-
-	Point np = {scaledX + from.x, scaledY + from.y};
-	return np;
-}
-// END MOVE
 
 // TODO allocate the int* instead of storing on stack
 Fish fish_make(int length, int* radi, int size, int* fins, int finCount, Point p, int speed) {
@@ -127,12 +33,21 @@ Fish fish_make(int length, int* radi, int size, int* fins, int finCount, Point p
 	return fish;
 }
 
+#define DEFAULT_LENGTH 11
+#define DEFAULT_RADII 7, 8, 8, 8, 7, 6, 5, 4, 3, 2, 7
+#define DEFAULT_FINC 2
+#define DEFAULT_FIN_1 3
+#define DEFAULT_FIN_2 7
+#define DEFAULT_SPEED 15
+#define FISH_DEFAULTS DEFAULT_LENGTH, radii, DEFAULT_LENGTH, fins, DEFAULT_FINC, p, 15
 Fish fish_make_default(Point p) {
-	int radi[11] = {7, 8, 8, 8, 7, 6, 5, 4, 3, 2, 7};
+	// radii are copied to their own varibles in fish_make so
+	// no need to allocate
+	int radii[DEFAULT_LENGTH] = {DEFAULT_RADII};
 	int* fins = (int*) checkedCalloc(2, sizeof(int));
-	fins[0] = 3;
-	fins[1] = 7;
-	return fish_make(11, radi, 11, fins, 2, p, 15);
+	fins[0] = DEFAULT_FIN_1;
+	fins[1] = DEFAULT_FIN_2;
+	return fish_make(FISH_DEFAULTS);
 }
 
 void fish_draw(Fish* fish) {
@@ -318,7 +233,7 @@ bool fish_swim(Fish* fish) {
 	// DEBUG
 	//draw_line_p(fish->start, fish->inLinePos);
 
-	draw_pixel_p(fish->target);
+	//draw_pixel_p(fish->target);
 	//draw_line_p(fish->start, point_add(fish->start, point_scale(normPathAxis.forward, 10)));
 	//draw_line_p(fish->start, point_add(fish->start, point_scale(normPathAxis.backward, 10)));
 	//draw_line_p(fish->start, point_add(fish->start, point_scale(normPathAxis.right, 10)));

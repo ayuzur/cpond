@@ -7,12 +7,14 @@
 #include "draw.h"
 #include "fish.h"
 #include "sleep.h"
-
+#include "llist.h"
+#include "utils.h"
 
 int width;
 int height;
-
-int main() {
+ 
+int main(int argc, char* argv[]) {
+	
 	srand(time(0));
 	initscr();
 	// makes cursor invisible
@@ -24,14 +26,33 @@ int main() {
 	width = getmaxx(stdscr) / 2;
 	height = getmaxy(stdscr);
 
-	Point center = {width / 2, height / 2};
-	Fish fish = fish_make_default(center);
+	int fishNum = 1;
+	
+	if (argc > 1) {
+		fishNum = atoi(argv[1]);
+	}
 
-	Point t = {rand() % width, rand() % height};
-	fish_target(&fish, t);
+	// explicity set to null so llist_add doesn't cause a segfault
+	Llist fishList = {NULL, NULL};
+
+	Point center = {width / 2, height / 2};
+	
+	Point t; 
+	for (int i = 0; i < fishNum; i++) {
+		Fish* newFish = (Fish*) checkedCalloc(1, sizeof(Fish));
+		t.x = rand() % width;
+		t.y = rand() % height;
+
+		*newFish = fish_make_default(center);
+		fish_target(newFish, t);
+		llist_add(&fishList, newFish);
+	}
+	
+	//fishList.head = checkedCalloc(1, sizeof(llist_Node));
 
 	char chlast = ' ';
 	bool pause = false;
+
 	while (true) {
 		char ch = getch();
 		if (ch == 'q') {
@@ -47,19 +68,23 @@ int main() {
 		// is erase or clear better?
 		erase();
 		mvprintw(1, 1, "%f", DELTA_TIME);	
-		mvprintw(4, 1, "head: %f %f", fish.head->p.x, fish.head->p.y);
 
-		bool there = false;
-		if (!pause) {
-			there = fish_swim(&fish);
-		}
-		if (there) {
-			t.x = rand() % width;
-			t.y = rand() % height;
-			fish_target(&fish, t);
-		}
+		// macro (expands into for loop that iterates through nodes)
+		llist_iterate(fishList) {
+			Fish* fish = (Fish*) node->data;
 
-		fish_draw(&fish);
+			bool there = false;
+			if (!pause) {
+				there = fish_swim(fish);
+			}
+			if (there) {
+				t.x = rand() % width;
+				t.y = rand() % height;
+				fish_target(fish, t);
+			}
+
+			fish_draw(fish);
+		}
 		refresh();
 		frameSleep();
 	}
