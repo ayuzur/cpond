@@ -38,8 +38,8 @@ Fish fish_make(int length, int* radi, int size, int* fins, int finCount, Point p
 #define DEFAULT_FINC 2
 #define DEFAULT_FIN_1 3
 #define DEFAULT_FIN_2 7
-#define DEFAULT_SPEED 15
-#define FISH_DEFAULTS DEFAULT_LENGTH, radii, DEFAULT_LENGTH, fins, DEFAULT_FINC, p, 15
+#define DEFAULT_SPEED 20
+#define FISH_DEFAULTS DEFAULT_LENGTH, radii, DEFAULT_LENGTH, fins, DEFAULT_FINC, p, DEFAULT_SPEED
 Fish fish_make_default(Point p) {
 	// radii are copied to their own varibles in fish_make so
 	// no need to allocate
@@ -255,5 +255,23 @@ bool fish_swim(Fish* fish) {
 	//fish_translate(fish, translation);
 	
 	return false;
+}
+
+void fish_seg_free(Seg* seg) {
+	if (seg == NULL) {
+		return;
+	}
+
+	Seg* next = seg->next;
+
+	free(seg);
+	fish_seg_free(next);
+
+}
+
+void fish_free(Fish* fish) {
+	fish_seg_free(fish->head);
+	free(fish->fins);
+	free(fish);
 }
 

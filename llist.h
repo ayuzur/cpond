@@ -13,6 +13,11 @@ typedef struct Llist {
 
 void llist_add(Llist* list, void* data);
 
+// free contained data before using the following functions
+// TODO take a function pointer to a freeing function to free the data
+void llist_node_free(llist_Node* node);
+void llist_free(Llist* list);
+
 #define llist_iterate(list) for (llist_Node* node = list.head; node != NULL; node = node->next)
 
 #endif

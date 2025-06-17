@@ -1,7 +1,7 @@
 
 obj = draw.o fish.o sleep.o llist.o utils.o
 
-cpond: main.c $(obj)
+cpond: main.c $(obj) 
 	gcc main.c $(obj) -lncurses -lm -o cpond
 
 draw.o: draw.c draw.h

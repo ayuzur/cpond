@@ -3,6 +3,7 @@
 #include <ncurses.h>
 #include <stdbool.h>
 #include <time.h>
+#include <string.h>
 
 #include "draw.h"
 #include "fish.h"
@@ -12,45 +13,45 @@
 
 int width;
 int height;
- 
+
 int main(int argc, char* argv[]) {
-	
+
 	srand(time(0));
+	
 	initscr();
 	// makes cursor invisible
 	curs_set(0);
 	noecho();
 	cbreak();
 	nodelay(stdscr, true);
+	
 	// takes 2 chars to make one pixel
 	width = getmaxx(stdscr) / 2;
 	height = getmaxy(stdscr);
-
-	int fishNum = 1;
-	
-	if (argc > 1) {
-		fishNum = atoi(argv[1]);
-	}
 
 	// explicity set to null so llist_add doesn't cause a segfault
 	Llist fishList = {NULL, NULL};
 
 	Point center = {width / 2, height / 2};
 	
+	int fishCount = 1;
+
+	if (argc > 1) {
+		fishCount = atoi(argv[1]);
+	}
+
 	Point t; 
-	for (int i = 0; i < fishNum; i++) {
+	for (int i = 0; i < fishCount; i++) {
 		Fish* newFish = (Fish*) checkedCalloc(1, sizeof(Fish));
 		t.x = rand() % width;
 		t.y = rand() % height;
-
+		
 		*newFish = fish_make_default(center);
+
 		fish_target(newFish, t);
 		llist_add(&fishList, newFish);
 	}
 	
-	//fishList.head = checkedCalloc(1, sizeof(llist_Node));
-
-	char chlast = ' ';
 	bool pause = false;
 
 	while (true) {
@@ -67,10 +68,8 @@ int main(int argc, char* argv[]) {
 
 		// is erase or clear better?
 		erase();
-		mvprintw(1, 1, "%f", DELTA_TIME);	
 
-		// macro (expands into for loop that iterates through nodes)
-		llist_iterate(fishList) {
+		for (llist_Node* node = fishList.head; node != NULL; node = node->next) {
 			Fish* fish = (Fish*) node->data;
 
 			bool there = false;
@@ -88,6 +87,18 @@ int main(int argc, char* argv[]) {
 		refresh();
 		frameSleep();
 	}
+
+	// freeing data (fish) stored in linked list
+	for (llist_Node* node = fishList.head; node != NULL; node = node->next) {
+		Fish* fish = (Fish*) node->data;
+		// frees fish allocated data then the fish itself
+		fish_free(fish);
+	}
+
+	// frees the nodes contained in fishList
+	// NOTE do not free fishList itself as it is on the stack
+	llist_node_free(fishList.head);
+
 
 	curs_set(1);
 	endwin();

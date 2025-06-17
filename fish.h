@@ -49,5 +49,8 @@ void fish_target(Fish* fish, Point target);
 // returns true when target has been reached
 bool fish_swim(Fish* fish);
 
+void fish_seg_free(Seg* seg);
+
+void fish_free(Fish* fish);
 
 #endif
