@@ -45,7 +45,7 @@ Point point_add(Point p1, Point p2) {
 	Point p = {p1.x + p2.x, p1.y + p2.y};
 	return p;
 }
-// what was this doing if the return was missing
+// what was this doing if the return was missing???
 Point point_sub(Point p1, Point p2) {
 	Point p = {p1.x - p2.x, p1.y - p2.y};
 	return p;

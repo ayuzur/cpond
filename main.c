@@ -25,15 +25,17 @@ int main(int argc, char* argv[]) {
 	cbreak();
 	nodelay(stdscr, true);
 	
-	// takes 2 chars to make one pixel
+	// divide by 2 as it takes 2 chars to make one pixel
 	width = getmaxx(stdscr) / 2;
 	height = getmaxy(stdscr);
 
-	// explicity set to null so llist_add doesn't cause a segfault
+	// explicity set to null so llist_add doesn't cause a segfault trying to access
+	// its members
 	Llist fishList = {NULL, NULL};
 
 	Point center = {width / 2, height / 2};
 	
+	// default fish count
 	int fishCount = 1;
 
 	if (argc > 1) {
@@ -41,6 +43,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	Point t; 
+	// allocating fishCount number of fish and giving them random targets
 	for (int i = 0; i < fishCount; i++) {
 		Fish* newFish = (Fish*) checkedCalloc(1, sizeof(Fish));
 		t.x = rand() % width;
@@ -72,11 +75,12 @@ int main(int argc, char* argv[]) {
 		for (llist_Node* node = fishList.head; node != NULL; node = node->next) {
 			Fish* fish = (Fish*) node->data;
 
-			bool there = false;
+			bool atTarget = false;
 			if (!pause) {
-				there = fish_swim(fish);
+				atTarget = fish_swim(fish);
 			}
-			if (there) {
+			// choose new random target if reached target
+			if (atTarget) {
 				t.x = rand() % width;
 				t.y = rand() % height;
 				fish_target(fish, t);

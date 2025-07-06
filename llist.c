@@ -27,6 +27,7 @@ void llist_node_free(llist_Node* node) {
 	free(node);
 	llist_node_free(next);
 }
+
 void llist_free(Llist* list) {
 	llist_node_free(list->head);
 	free(list);
