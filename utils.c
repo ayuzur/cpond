@@ -28,6 +28,12 @@ Point rotL(Point p) {
 
 PerpPoints getScaledPerpPoints(Point forward, int radius) {
 	float dist = sqrtf(forward.x * forward.x + forward.y * forward.y);
+	
+	if (dist == 0) {
+		PerpPoints p = {0, 0, 0, 0};
+		return p;
+	}
+
 	//printf("dist: %f\n", dist);
 	float scale = (float) radius / dist;
 	forward.x *= scale;
