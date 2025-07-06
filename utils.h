@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include <stdlib.h>
+#include <stdbool.h>
 // replace wth point.h
 #include "draw.h"
 

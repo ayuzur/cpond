@@ -5,6 +5,9 @@ creates procedurally animated fish to swim around your terminal
 [youtube](https://www.youtube.com/watch?v=OaGTJ6GPloo)
 
 ## make
+
+_note while programming this I using using gcc_
+
 1. git clone
 2. ensure you have ncurses installed
 3. move into your local clone of the repo
