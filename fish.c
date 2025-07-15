@@ -29,7 +29,7 @@ Fish fish_make(int length, int* radi, int size, int* fins, int finCount, Point p
 	}
 	cur->next = NULL;
 	Point d = {0, 0};
-	Fish fish = {head, d, d, fins, finCount, speed};
+	Fish fish = {head, d, d, fins, finCount, speed, d};
 	return fish;
 }
 
