@@ -28,7 +28,7 @@ Point rotL(Point p) {
 
 PerpPoints getScaledPerpPoints(Point forward, int radius) {
 	float dist = sqrtf(forward.x * forward.x + forward.y * forward.y);
-	
+
 	if (dist == 0) {
 		Point zero = {0, 0};
 		PerpPoints p = {zero, zero, zero, zero};

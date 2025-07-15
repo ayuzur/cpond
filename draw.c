@@ -1,14 +1,36 @@
 #include <ncurses.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
+#include "braille.h"
 #include "draw.h"
 
-void draw_pixelch(int x, int y, char* ch) {
-	mvprintw(y, x * 2, "%s%s", ch, ch);
+void draw_pixelch(int x, int y, char ch) {
+	mvprintw(y, x * 2, "%c%c", ch, ch);
 }
 
+void draw_unicode_ch(int x, int y, wchar_t wc) {
+	cchar_t wch;
+	setcchar(&wch, &wc, 0, 0, NULL);
+	mvadd_wch(y, x, &wch);
+}
+
+void draw_unicode_pixel(int x, int y, wchar_t wc) {
+	cchar_t wch;
+	setcchar(&wch, &wc, 0, 0, NULL);
+	mvadd_wch(y, x * 2, &wch);
+	mvadd_wch(y, (x * 2) + 1, &wch);
+}
+
+
 void draw_pixel(int x, int y) {
-	draw_pixelch(x, y, "#");
+
+	if (braille_flag) {
+		draw_braille_pixel(x, y, braille_screen);
+	}
+	else {
+		draw_pixelch(x, y, '#');
+	}
 }
 
 void draw_pixel_p(Point p) {

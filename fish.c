@@ -27,12 +27,13 @@ Fish fish_make(int length, int* radi, int size, int* fins, int finCount, Point p
 		cur->radius = radi[i];
 		cur->p = p;
 	}
-	//cur->next = 
+	cur->next = NULL;
 	Point d = {0, 0};
 	Fish fish = {head, d, d, fins, finCount, speed};
 	return fish;
 }
 
+// TODO should probably see if I can rewrite this better
 #define DEFAULT_LENGTH 11
 #define DEFAULT_RADII 7, 8, 8, 8, 7, 6, 5, 4, 3, 2, 7
 #define DEFAULT_FINC 2
@@ -146,6 +147,8 @@ void fish_update_seg(Seg* cur, Seg* prev) {
 	float diffY = prev->p.y - cur->p.y;
 	float dist = sqrtf(diffX * diffX + diffY * diffY);
 
+	// TODO this name and following comments need to be updated. its no 
+	// longer using the combined radius
 	int combinedRadi = cur->radius;
 	// if seg circles dont interlap
 	if (dist > combinedRadi) {
@@ -218,13 +221,11 @@ bool fish_swim(Fish* fish) {
 		return true;
 	}
 
-
 	Point forward = point_sub(fish->target, fish->start);
 
 	//draw_line_p(fish->start, point_add(fish->start, forward));
 	//draw_line_p(fish->start, fish->target);
 
-	// TODO verify
 	PerpPoints normPathAxis = getScaledPerpPoints(forward, 1);
 
 	Point forwardTranslation = point_scale(normPathAxis.forward, fish->speed * DELTA_TIME);
