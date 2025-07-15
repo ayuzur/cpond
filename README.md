@@ -4,6 +4,10 @@ creates procedurally animated fish to swim around your terminal
 
 [youtube](https://www.youtube.com/watch?v=OaGTJ6GPloo)
 
+> [!NOTE]
+> Now with command line options such as braille character drawing!
+> See "usage" below.
+
 ## make
 
 _note I used gcc_
@@ -17,6 +21,7 @@ _note I used gcc_
 - to run `./cpond`
 
 - `-b or --braille` allows you to toggle the use of braille characters
+    - This makes it so you don't have to zoom out (as far) to see the fish!
 - `-c or --count` allows you to set the number of fish
 - `--fps` allows you to change the fps by changing the delay between frames.
     - ex: `--fps 60` will set the delay between frames to 1s / 60.
