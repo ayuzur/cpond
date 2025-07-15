@@ -2,8 +2,6 @@
 ![image](https://github.com/user-attachments/assets/a8dddebd-af3d-4e20-a346-9742b1322300)
 creates procedurally animated fish to swim around your terminal
 
-[youtube](https://www.youtube.com/watch?v=OaGTJ6GPloo)
-
 > [!NOTE]
 > Command line options have been added, including the option to use braille character drawing!
 > See "usage" below.
