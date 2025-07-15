@@ -5,7 +5,7 @@ creates procedurally animated fish to swim around your terminal
 [youtube](https://www.youtube.com/watch?v=OaGTJ6GPloo)
 
 > [!NOTE]
-> Now with command line options such as braille character drawing!
+> Command line options have been added, including the option to use braille character drawing!
 > See "usage" below.
 
 ## make
