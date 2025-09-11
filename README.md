@@ -14,6 +14,7 @@ _note I used gcc_
 2. ensure you have ncurses installed. (ncurses6 was used)
 3. move into your local clone of the repo
 4. run `make` to get the cpond executable
+    - if you are on mac and run into issues try changing `-lncursesw` to `-lncurses` in the Makefile
 
 ## usage
 - to run `./cpond`
