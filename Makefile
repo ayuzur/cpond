@@ -1,8 +1,10 @@
 
 obj = draw.o fish.o sleep.o llist.o utils.o braille.o
+# you may need to change -lncursesw to -lncurses if you are on mac
 flags=-lncursesw -lm -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600
 #$$(ncursesw6-config --cflags)
-eflags=-Wpedantic -Wall -Wextra -fsanitize=float-divide-by-zero 
+eflags=-Wpedantic -Wall -Wextra 
+#-fsanitize=float-divide-by-zero 
 #-g3
 #-Wconversion
 
