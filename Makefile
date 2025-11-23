@@ -1,18 +1,21 @@
-
-obj = draw.o fish.o sleep.o llist.o utils.o braille.o
-# you may need to change -lncursesw to -lncurses if you are on mac
-flags=-lncursesw -lm -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600
+obj = main.o draw.o fish.o sleep.o llist.o utils.o braille.o
+# you may need to change -lncursesw to -lncurses if you are on MacOS
+link=-lncursesw -lm
+ncursesw_macros=-D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600
 #$$(ncursesw6-config --cflags)
 eflags=-Wpedantic -Wall -Wextra 
 #-fsanitize=float-divide-by-zero 
 #-g3
 #-Wconversion
 
-cpond: main.c $(obj) 
-	gcc main.c $(obj) $(flags) -o cpond $(eflags)
+cpond: $(obj) 
+	gcc $(obj) $(link) -o cpond
+
+main.o: draw.h fish.h sleep.h llist.h utils.h braille.h
+	gcc -c main.c $(eflags)
 
 draw.o: draw.c draw.h
-	gcc -c draw.c $(flags) $(eflags)
+	gcc -c draw.c $(eflags)$(ncursesw_macros)
 
 fish.o: fish.c fish.h
 	gcc -c fish.c $(eflags)
